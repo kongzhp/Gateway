@@ -11,7 +11,7 @@ class GatewayTCPHandler(BaseRequestHandler):
     def handle(self):
         self.role.kill_mutex.acquire()
         
-        best_proc = None
+        best_proc = None #Ö¸Ïò
         for pid, proc in self.role.processes.items():
             ctrl = proc[0][1]
             nb_conn = ctrl.send('nb_conn')

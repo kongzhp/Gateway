@@ -8,7 +8,8 @@ import socket
 from TCPHandler import GatewayTCPHandler
 from SocketServer import TCPServer
 from multiprocessing import Pipe
-
+from ControlProcess import ControlChildProcess
+from ConnectionPoolProcess import ConnectionPoolProcess
 class Role(object):
     '''
     gate way role
@@ -17,11 +18,12 @@ class Role(object):
         
         self.processes = {}
         self.kill_mutex = threading.Lock()
-        GatewayTCPHandler.role = self
+        
 
     def init(self):
         addr = ('0.0.0.0', 80)
         try:
+            GatewayTCPHandler.role = self
             self.server = TCPServer(addr, GatewayTCPHandler, bind_and_activate=False)
             self.server.server_bind()
             self.server.server_activate()
@@ -38,7 +40,16 @@ class Role(object):
         (p01, p11) = Pipe() # for the child
         self.pipes = (p10, p11)
         child_pipes = (p01, p00)
+        proc = ConnectionPoolProcess(child_pipes, self.pipes) #只有一个ConnectionPool
+        proc.start()
+        child_pipes[0].close()
+        child_pipes[1].close()
         
+        ctrl = ControlChildProcess(self)
+        ctrl.start()
+        
+        self.processes[proc.pid] = [(proc, ctrl), 0]
+        return proc.pid
             
         
         

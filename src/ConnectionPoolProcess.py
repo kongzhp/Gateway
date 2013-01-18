@@ -16,12 +16,12 @@ class ConnectionPoolProcess(Process):
     '''
     classdocs
     '''
-    def __init__(self, child_pipes, father_pipes, ssl_ctx):
+    def __init__(self, child_pipes, father_pipes):
         Process.__init__(self)
         
         self.pipes = child_pipes
         self.father_pipes = father_pipes
-        self.ssl_ctx = ssl_ctx
+        #self.ssl_ctx = ssl_ctx
         
         self.f_control = None
         self.t_asyncore = None
