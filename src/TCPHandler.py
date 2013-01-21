@@ -3,7 +3,7 @@ Created on 2013-1-17
 
 @author: ausu
 '''
-from multiprocessing.reduction import reduce_socket
+from multiprocessing.reduction import reduce_socket #使socket可序列化
 from SocketServer import BaseRequestHandler
 import pickle
 
